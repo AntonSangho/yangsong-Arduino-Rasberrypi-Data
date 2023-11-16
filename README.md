@@ -34,8 +34,8 @@ co2센서와 온습도 데이터 값을 웹 상으로 보여준다.
 ```sudo apt-get update -y && sudo apt-get upgrade```  
 3. 프로젝트 다운로드받기 **(microschool 레포지토리로 변경)**  
 ```git clone https://github.com/AntonSangho/yangsong-Arduino-Rasberrypi-Data.git```
-4. Fastapi 설치하기 
-
+4. [Arduino CLI 설치하기](https://www.caronteconsulting.com/en/news/how-to/raspberry-arduino-cli/)  
+5. 
 
 ## 참고링크
 
