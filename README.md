@@ -34,8 +34,14 @@ co2센서와 온습도 데이터 값을 웹 상으로 보여준다.
 ```sudo apt-get update -y && sudo apt-get upgrade```  
 3. 프로젝트 다운로드받기 **(microschool 레포지토리로 변경)**  
 ```git clone https://github.com/AntonSangho/yangsong-Arduino-Rasberrypi-Data.git```
-4. [Arduino CLI 설치하기](https://www.caronteconsulting.com/en/news/how-to/raspberry-arduino-cli/)  
-5. 
+4. [Arduino CLI 설치하기(위 링크를 따라한다.)](https://www.caronteconsulting.com/en/news/how-to/raspberry-arduino-cli)  
+5. arduino-cli파일을 다른 경로에서도 실행되도록 복사해 옮긴다.   
+```sudo cp ./arduino-cli /usr/local/bin/```
+6. arduino-cli를 이용해서 온습도센서 예제동작시키기  
+    1. ```arduino-cli lib install "DHT sensor library"```
+    2. ```arduino-cli compile --fqbn arduino:avr:uno DHT.ino```
+    3. ```arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno DHT.ino```
+    4. ```screen /dev/ttyACM0 9600```
 
 ## 참고링크
 
