@@ -1,1 +1,4 @@
 yangsongenv/
+*.pyc
+__pycahe__/
+
