@@ -1,4 +1,4 @@
-from black import E
+#from black import E
 import serial
 import re
 import json
@@ -9,7 +9,8 @@ conn = pymysql.connect(
 )
 cur = conn.cursor()
 
-ser = serial.Serial(port="COM5", baudrate=9600)
+#ser = serial.Serial(port="COM5", baudrate=9600)
+ser = serial.Serial(port="/dev/ttyACM0", baudrate=9600)
 
 p = re.compile("{.+}")
 
@@ -19,10 +20,10 @@ while True:
         res = ser.readline()
         s = res.decode()[: len(res) - 1]
         if p.match(s):
+            print("test")
             try:
                 j = json.loads(s)
                 print(f"sucess: {j}")
-
                 cur.execute(
                     f"INSERT INTO yang{j['id']} (co2, temperature, humidity) VALUES ({j['co2']}, {j['temperature']}, {j['humidity']})"
                 )

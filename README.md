@@ -29,6 +29,7 @@ co2센서와 온습도 데이터 값을 웹 상으로 보여준다.
 2. Raspi-config 설정  
 - SSH enable
 - GPIO enable 
+- Local을 KR로 설정
 - Keyboard layout UK -> US
 2. 업데이트 하기   
 ```sudo apt-get update -y && sudo apt-get upgrade```  
@@ -42,6 +43,11 @@ co2센서와 온습도 데이터 값을 웹 상으로 보여준다.
     2. ```arduino-cli compile --fqbn arduino:avr:uno DHT.ino```
     3. ```arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno DHT.ino```
     4. ```screen /dev/ttyACM0 9600```
+7. ```sudo apt-get update -y && sudo apt-get upgarde -y```
+8. 가상환경 만들기  
+```python -m venv yangsongenv```
+9. [MySQL 설치하기](https://pimylifeup.com/raspberry-pi-mysql/)
+
 
 ## 참고링크
 

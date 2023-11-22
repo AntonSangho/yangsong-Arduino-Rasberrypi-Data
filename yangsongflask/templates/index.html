@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Yangsong Farm Sensor Data</title>
+</head>
+<body>
+    <h1>Yangsong Farm Sensor Readings</h1>
+    {% if humidity and temperature %}
+        <p>Humidity: {{ humidity }} %</p>
+        <p>Temperature: {{ temperature }} °C</p>
+    {% else %}
+        <p>No data available.</p>
+    {% endif %}
+</body>
+</html>
+
