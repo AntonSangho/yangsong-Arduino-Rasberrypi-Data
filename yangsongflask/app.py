@@ -13,12 +13,31 @@ mydb = mysql.connector.connect(
   database="yangsongfarm"
 )
 
+def read_serial_data():
+    if ser.in_waiting > 0:
+        line = ser.readline().decode('utf-8').rstrip()
+        data = line.split("\t")
+        if len(data) >= 2:
+            humidity_str = data[0].split(": ")[1].replace('%', '')
+            temperature_str = data[1].split(": ")[1].replace(' *C', '')
+            return float(humidity_str), float(temperature_str)
+    return None, None
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/ys2_data')
 def ys2_data():
+    humidity, temperature = read_serial_data()
+    if humidity is not None and temperature is not None:
+        mycursor = mydb.cursor()
+        sql = "INSERT INTO readings (humidity, temperature) VALUES (%s, %s)"
+        val = (humidity, temperature)
+        mycursor.execute(sql, val)
+        mydb.commit()
+        mycursor.close()
+
     mycursor = mydb.cursor(dictionary=True)
     mycursor.execute("SELECT timestamp, temperature, humidity FROM readings ORDER BY timestamp DESC LIMIT 10")
     data = mycursor.fetchall()
