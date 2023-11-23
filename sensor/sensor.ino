@@ -66,14 +66,7 @@ void loop() {
   // 오류 검사: NaN (not a number) 값을 반환하는 경우
   if (isnan(h) || isnan(t)) {
     Serial.println("Failed to read from DHT sensor!");
-  } else {
-    // 시리얼 포트를 통해 DHT22 데이터 전송
-    Serial.print("Humidity: ");
-    Serial.print(h);
-    Serial.print(" %\t");
-    Serial.print("Temperature: ");
-    Serial.print(t);
-    Serial.println(" *C");
+    return;
   }
 
   // RX-9 센서에서 CO2 농도 읽기 및 처리
@@ -81,17 +74,23 @@ void loop() {
   if (current_time - prev_time >= set_time) {
     warm_up_chk();
     ppm_cal(); 
-    // RX-9 센서 데이터 처리 관련 다른 함수 호출은 필요에 따라 추가
     prev_time = current_time;
+  } else {
+    return;  // CO2 데이터가 준비되지 않았으면 데이터 전송을 건너뜁니다.
   }
 
-  // 시리얼 포트를 통해 RX-9 데이터 전송
-  Serial.print("CO2 Concentration: ");
+  // 모든 센서 데이터를 하나의 문자열로 조합하여 시리얼 포트를 통해 전송
+  Serial.print("Humidity: ");
+  Serial.print(h);
+  Serial.print(" %\tTemperature: ");
+  Serial.print(t);
+  Serial.print(" *C\tCO2 Concentration: ");
   Serial.print(co2_ppm_output);
   Serial.println(" ppm");
 
   delay(2000); // 2초 간격으로 데이터 읽기
 }
+
 
 // RX-9 데이터 처리 관련 함수들 (기존 코드에서 필요한 부분을 추출하여 사용)
 void warm_up_chk() {

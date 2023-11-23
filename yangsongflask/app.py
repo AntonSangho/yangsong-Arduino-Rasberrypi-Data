@@ -16,12 +16,18 @@ mydb = mysql.connector.connect(
 def read_serial_data():
     if ser.in_waiting > 0:
         line = ser.readline().decode('utf-8').rstrip()
+        print(f"Raw Serial Data:{line}") # 원시 시리얼 데이터 로그
         data = line.split("\t")
-        if len(data) >= 2:
+        print(f"Parased Data: {data}") # 파싱된 데이터로그
+        print(len(data))
+        if len(data) >= 3:
             humidity_str = data[0].split(": ")[1].replace('%', '')
             temperature_str = data[1].split(": ")[1].replace(' *C', '')
-            return float(humidity_str), float(temperature_str)
-    return None, None
+            co2_str = data[2].split(": ")[1].replace(' ppm', '') # 새로 추가된 부분
+        else:
+            print("Data does not have enough elements")
+        return float(humidity_str), float(temperature_str), float(co2_str)
+    return None, None, None # 수정된 반환 값
 
 @app.route('/')
 def index():
@@ -29,17 +35,23 @@ def index():
 
 @app.route('/ys2_data')
 def ys2_data():
-    humidity, temperature = read_serial_data()
-    if humidity is not None and temperature is not None:
-        mycursor = mydb.cursor()
-        sql = "INSERT INTO readings (humidity, temperature) VALUES (%s, %s)"
-        val = (humidity, temperature)
-        mycursor.execute(sql, val)
-        mydb.commit()
-        mycursor.close()
+    humidity, temperature, co2 = read_serial_data() # CO2 추가
+    if humidity is not None and temperature is not None and co2 is not None:
+        try:
+            mycursor = mydb.cursor()
+            sql = "INSERT INTO readings (humidity, temperature, co2) VALUES (%s, %s, %s)"
+            val = (humidity, temperature, co2)
+            print(f"Executing SQL: {sql} with values {val}") # SQL 실행 로그
+            mycursor.execute(sql, val)
+            mydb.commit()
+            print(f"Inserted data into database") # 데이터 삽입 확인 로그
+            mycursor.close()
+        except mysql.connector.Error as err:
+            print(f"Error occurred: {err}") # 예외 발생 시 로그 출력
 
     mycursor = mydb.cursor(dictionary=True)
-    mycursor.execute("SELECT timestamp, temperature, humidity FROM readings ORDER BY timestamp DESC LIMIT 10")
+    # CO2 데이터를 포함하여 쿼리 실행
+    mycursor.execute("SELECT timestamp, temperature, humidity, co2 FROM readings ORDER BY timestamp DESC LIMIT 10")
     data = mycursor.fetchall()
     mycursor.close()
     return jsonify(data)
