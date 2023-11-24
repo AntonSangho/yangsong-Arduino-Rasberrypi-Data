@@ -53,6 +53,7 @@ def ys2_data():
     # CO2 데이터를 포함하여 쿼리 실행
     mycursor.execute("SELECT timestamp, temperature, humidity, co2 FROM readings ORDER BY timestamp DESC LIMIT 10")
     data = mycursor.fetchall()
+    #print(f"Retrieved data: {data}") # 조회된 데이터 로그
     mycursor.close()
     return jsonify(data)
 

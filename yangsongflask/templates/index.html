@@ -35,7 +35,11 @@
                     table.innerHTML = "<tr><th>시간</th><th>온도 (°C)</th><th>습도 (%)</th><th>CO2 (ppm)</th>";
                     let chartData = [['시간', '온도', '습도', 'CO2']];
                     data.forEach(row => {
-                        let timestamp = new Date(row.timestamp);
+                        //let timestamp = new Date(row.timestamp);
+                        let timestamp = row.timestamp;
+                        //타임스탬프 처리 결과 로그 출력
+                        console.log(`Received Timestamp: ${row.timestamp}`);
+
                         let temperature = parseFloat(row.temperature);
                         let humidity = parseFloat(row.humidity);
                         let co2 = parseFloat(row.co2);
