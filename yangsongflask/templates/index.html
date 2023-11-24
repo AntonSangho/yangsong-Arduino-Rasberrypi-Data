@@ -2,13 +2,13 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>양송 농장 센서 데이터</title>
+    <title>양송이 농장 센서 데이터</title>
     <!-- ... (스타일 및 기타 헤드 요소는 동일) ... -->
     <style>
         table {
             width: 100%;
             border-collapse: collapse;
-        }
+        이
         th, td {
             border: 1px solid black;
             padding: 8px;
@@ -27,44 +27,49 @@
 	    google.charts.load('current', {'packages':['corechart']});
 	    google.charts.setOnLoadCallback(loadData);
 
-        function loadData() {
+         function loadData() {
             fetch('/ys2_data')
                 .then(response => response.json())
                 .then(data => {
                     let table = document.getElementById("data-table");
                     table.innerHTML = "<tr><th>시간</th><th>온도 (°C)</th><th>습도 (%)</th><th>CO2 (ppm)</th>";
-                    let chartData = [['시간', '온도', '습도', 'CO2']];
-                    data.forEach(row => {
-                        //let timestamp = new Date(row.timestamp);
-                        let timestamp = row.timestamp;
-                        //타임스탬프 처리 결과 로그 출력
-                        console.log(`Received Timestamp: ${row.timestamp}`);
+                    let tempData = [['시간', '온도']];
+                    let humidityData = [['시간', '습도']];
+                    let co2Data = [['시간', 'CO2']];
 
+                    data.forEach(row => {
+                        let timestamp = row.timestamp;
                         let temperature = parseFloat(row.temperature);
                         let humidity = parseFloat(row.humidity);
                         let co2 = parseFloat(row.co2);
-                        table.innerHTML += `<tr><td>${timestamp}</td><td>${temperature}</td><td>${humidity}</td><td>${co2}</td></tr>`; // 수정됨
-                        chartData.push([timestamp, temperature, humidity, co2]);
+                        table.innerHTML += `<tr><td>${timestamp}</td><td>${temperature}</td><td>${humidity}</td><td>${co2}</td></tr>`;
+                        tempData.push([timestamp, temperature]);
+                        humidityData.push([timestamp, humidity]);
+                        co2Data.push([timestamp, co2]);
                     });
-                    drawChart(chartData); // 이 위치로 이동
+
+                    drawChart(tempData, 'temp_chart_div', '온도 추이');
+                    drawChart(humidityData, 'humidity_chart_div', '습도 추이');
+                    drawChart(co2Data, 'co2_chart_div', 'CO2 추이');
                 });
         }
 
-	function drawChart(chartData) {
+        function drawChart(chartData, elementId, title) {
             var data = google.visualization.arrayToDataTable(chartData);
             var options = {
-                title: '온도, 습도 및 CO2 추이',
+                title: title,
                 curveType: 'function',
                 legend: { position: 'bottom' }
             };
-            var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+            var chart = new google.visualization.LineChart(document.getElementById(elementId));
             chart.draw(data, options);
         }
-	    setInterval(loadData, 1000);
+
+        setInterval(loadData, 1000);
     </script>
 </head>
 <body>
-    <h1>양송 농장 센서 데이터</h1>
+    <h1>양송이 농장 센서 데이터</h1>
     <table id="data-table">
         <tr>
             <th>시간</th>
@@ -74,7 +79,9 @@
         </tr>
         <!-- 데이터가 여기에 채워집니다 -->
     </table>
-    <div id="chart_div"></div>
+    <div id="temp_chart_div" class="chart_div"></div>
+    <div id="humidity_chart_div" class="chart_div"></div>
+    <div id="co2_chart_div" class="chart_div"></div>
 </body>
 </html>
 
