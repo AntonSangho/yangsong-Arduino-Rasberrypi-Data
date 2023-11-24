@@ -39,6 +39,13 @@ def ys2_data():
     if humidity is not None and temperature is not None and co2 is not None:
         try:
             mycursor = mydb.cursor()
+
+            # 행 수 확인
+            mycursor.execute("SELECT COUNT(*) FROM readings")
+            count = mycursor.fetchone()[0]
+            if count >=6920:
+                mycursor.execute("DELETE FROM readings ORDER BY timestamp ASC LIMIT 1")
+                print(f"Delete log") # 데이터 제거
             sql = "INSERT INTO readings (humidity, temperature, co2) VALUES (%s, %s, %s)"
             val = (humidity, temperature, co2)
             print(f"Executing SQL: {sql} with values {val}") # SQL 실행 로그

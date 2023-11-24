@@ -1,0 +1,13 @@
+[Unit]
+Description=Dev flask application
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/pi/yangsong-Arduino-Rasberrypi-Data/yangsongenv/bin/python /home/pi/yangsong-Arduino-Rasberrypi-Data/yangsongflask/app.py
+WorkingDirectory=/home/pi/moya_attendance
+User=root
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
