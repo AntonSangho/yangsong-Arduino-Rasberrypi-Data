@@ -1,4 +1,5 @@
 yangsongenv/
 *.pyc
 __pycahe__/
+arduino/bin/
 
