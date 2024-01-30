@@ -12,10 +12,10 @@ marp: true
 --- 
 
 # 차례
-1. co2센서 소개
+1. CO2센서 소개
 2. 구성품확인 
-2. 실행하기
-3. 측정하기 
+2. 아두이노 실행하기
+3. CO2 측정하기 
 4. 데이터 저장하기 
 
 ---
@@ -104,7 +104,7 @@ void loop()
 
 # 아두이노 실행하기
 ![width:800px ](./img/sketch.png)
-###### 라즈베리파이 바탕화면에 있는 아두이노를 실행합니다. (아두이노 코드는 이미 들어있기 때문에 별도로 컴파일 업로드를 안해도됩니다. ) 
+###### 라즈베리파이 바탕화면에 있는 아두이노를 실행합니다. (아두이노 코드는 이미 들어있기 때문에 별도로 컴파일과 업로드를 안해도됩니다. ) 
 
 
 ---
@@ -134,34 +134,46 @@ void loop()
 
 ---
 # 터미널창을 열기
-
 ![width:800px ](./img/Terminal.png)
-
+###### 좌측상단의 라즈베리파이를 누루고 Accesories 안에 Terminal을 선택합니다. 
 ---
 
 # python 파일을 실행하기
-
 ![width:800px ](./img/Run_python.png)
-
-
-
+###### 아래 명령어를 실행합니다.  
+```bash 
+python save_data.py
+```
 ----
 # 터미널창에 데이터 나오는 것을 확인하기 
-
 ![width:800px ](./img/Terminal_serialprint.png)
+###### 터미널에서 데이터가 1초 단위로 나오면서 저장을 시작합니다.
 
 ----
-# 데이터가 저장하는것을 중지시키기
-
+# 데이터가 저장되는 것을 중지시키기
 ![width:800px ](./img/Stop_print.png)
+###### Ctrl + C 명령어로 데이터저장을 종료시킵니다. 
+----
+# 저장된 데이터가 있는 파일 열기 
+![width:800px ](./img/Desktop_sensordata.png)
+###### 바탕화면에 있는 senser_data.csv 파일을 더블클릭해서 실행합니다.  
+----
+# 엑셀파일열기 (LibOffice)  
+![width:800px ](./img/LibreOffice.png)
+###### 엑셀파일처럼 열리는 것을 확인합니다.  
 
 ----
-# 저장된 데이터 열기 
+# 데이터를 차트로 만들기
+![width:800px ](./img/ChatWizard.png)
+###### 상단의 메뉴바에서 Insert 안에있는 Chart를 실행합니다.  
 
-![width:800px ](./img/Desktop_sensordata.png)
-
-
- 
+----
+# 차트형태를 선으로 만들기 
+![width:800px ](./img/ChartType_Line.png)
+###### Chart 형태를 선으로 변경합니다.  
+----
+# 완성  
+![width:800px ](./img/Chart_Done.png)
 
 ---
 
