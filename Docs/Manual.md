@@ -16,6 +16,7 @@ marp: true
 2. 구성품확인 
 2. 실행하기
 3. 측정하기 
+4. 데이터 저장하기 
 
 ---
 ## CO2센서 소개
@@ -128,6 +129,41 @@ void loop()
 ###### 시리얼 플로터로 데이터의 추이를 그래프로 확인할 수 있습니다. 
 
 --- 
+
+# 데이터 저장하기 
+
+---
+# 터미널창을 열기
+
+![width:800px ](./img/Terminal.png)
+
+---
+
+# python 파일을 실행하기
+
+![width:800px ](./img/Run_python.png)
+
+
+
+----
+# 터미널창에 데이터 나오는 것을 확인하기 
+
+![width:800px ](./img/Terminal_serialprint.png)
+
+----
+# 데이터가 저장하는것을 중지시키기
+
+![width:800px ](./img/Stop_print.png)
+
+----
+# 저장된 데이터 열기 
+
+![width:800px ](./img/Desktop_sensordata.png)
+
+
+ 
+
+---
 
 # 참고사항 
 1. 초반 3분 결과는 예열시간에 나오는 데이터이므로 무시해도됩니다.
