@@ -14,13 +14,12 @@ marp: true
 # 차례
 1. CO2센서 소개
 2. 구성품확인 
-2. 아두이노 실행하기
 3. CO2 측정하기 
 4. 데이터 저장하기 
 
 ---
 ## CO2센서 소개
-- 가스가 흡수하는 적외선 양으로 측정합니다. 
+- 가스가 흡수하는 적외선 양으로 CO2를 측정합니다. 
 - 특정 가스 농도를 구체적으로 구분해서 측정합니다.
 - 주변의 산소농도나 온도에 영향을 받지않습니다.
 - 유효범위가 0~50000pm으로 광범위합니다. 
@@ -45,6 +44,22 @@ marp: true
 
 ###### 참고: 이미 연결된 상태이므로 센서가 아두이노의 10과 11번 핀에 연결된다는 것만 확인하면 됩니다. 
 
+
+---
+
+# CO2 측정하기 
+
+---
+# 라즈베리파이 실행하기 
+![width:800px ](./img/Desktop.png)
+###### 전에 보내드렸던 마우스와 모니터를 연결한후에 전원케이블을 연결합니다.
+
+---
+
+# 아두이노 실행하기
+![width:800px ](./img/sketch.png)
+###### 라즈베리파이 바탕화면에 있는 아두이노를 실행합니다. 
+###### Compile과 Upload를 통해 아두이노에 코드를 넣어줍니다. 
 ---
 
 ## 아두이노 코드 
@@ -90,26 +105,55 @@ void loop()
     }
   }
 }
+
 ```
 ###### 아두이노의 시리얼 모니터로 0.5초 간격으로 CO2의 ppm 농도를 출력합니다.
 ---
-# 실행하기
+# 측정시간을 1분으로 변경하기 
+```c 
+#include <SoftwareSerial.h>
 
----
-# 라즈베리파이 실행하기 
-![width:800px ](./img/Desktop.png)
-###### 전에 보내드렸던 마우스와 모니터를 연결한후에 전원케이블을 연결합니다.
+SoftwareSerial mySerial(10, 11); // RX, TX
+unsigned char hexData[9] = {0xFF, 0x01, 0x86, 0x00, 0x00, 0x00, 0x00, 0x00, 0x79}; //Read the gas density command /Don't change the order
 
----
+void setup()
+{
+  Serial.begin(9600);
+  while (!Serial) {
+  }
+  mySerial.begin(9600);
+}
 
-# 아두이노 실행하기
-![width:800px ](./img/sketch.png)
-###### 라즈베리파이 바탕화면에 있는 아두이노를 실행합니다. (아두이노 코드는 이미 들어있기 때문에 별도로 컴파일과 업로드를 안해도됩니다. ) 
+void loop()
+{
+  mySerial.write(hexData, 9);
+  delay(6000);
 
+  for (int i = 0, j = 0; i < 9; i++)
+  {
+    if (mySerial.available() > 0)
+    {
+      long hi, lo, CO2;
+      int ch = mySerial.read();
 
----
-# 측정하기
-
+      if (i == 2) {
+        hi = ch;    //High concentration
+      }
+      if (i == 3) {
+        lo = ch;    //Low concentration
+      }
+      if (i == 8) {
+        CO2 = hi * 256 + lo; //CO2 concentration
+        //Serial.print("CO2 concentration: ");
+        //Serial.print(CO2);
+        Serial.println(CO2);
+        //Serial.println("ppm");
+      }
+    }
+  }
+}
+```
+###### 아두이노 코드에서 delay(500)을 delay(6000)로 변경하고 Compile한 후에 Upload하면 변경됩니다. 
 ---
 
 # 시리얼 모니터로 데이터 확인하기 
@@ -131,13 +175,20 @@ void loop()
 --- 
 
 # 데이터 저장하기 
+---
+# 소개
+- 아두이노에 연결된 센서로 부터 데이터를 라즈베리파이에 저장합니다.
 
+# 실행방법
+1. 터미널창 열기
+2. Python 파일 실행하기
+3. 저장된 파일 열기
+4. 데이터를 그래프로 만들기
 ---
 # 터미널창을 열기
 ![width:800px ](./img/Terminal.png)
 ###### 좌측상단의 라즈베리파이를 누루고 Accesories 안에 Terminal을 선택합니다. 
 ---
-
 # python 파일을 실행하기
 ![width:800px ](./img/Run_python.png)
 ###### 아래 명령어를 실행합니다.  
@@ -161,6 +212,7 @@ python save_data.py
 # 엑셀파일열기 (LibOffice)  
 ![width:800px ](./img/LibreOffice.png)
 ###### 엑셀파일처럼 열리는 것을 확인합니다.  
+###### *데이터는 마지막 기록시간에서 추가됩니다.
 
 ----
 # 데이터를 차트로 만들기
@@ -180,6 +232,18 @@ python save_data.py
 # 참고사항 
 1. 초반 3분 결과는 예열시간에 나오는 데이터이므로 무시해도됩니다.
 2. 센서가 필터링 알고리즘을 내부에서 실행하므로 평균값을 출력합니다.  
+3. 데이터 저장하는 python 프로그램을 실행할 때는 Arduino IDE를 종료시켜야합니다. 
+4. 데이터 구분하려면 senser_data.csv파일을 새로운 이름으로 저장합니다. 예)sensor_data_1.csv로 저장 
+
+
+---
+
+# 요청사항
+1. CO2값의 추이를 확인하면서 센서성능을 확인부탁합니다.
+2. 적당한 데이터 저장 횟수와 시간을 정해주세요. 
+
+
+
 
 ---
 
